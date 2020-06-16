@@ -1,0 +1,17 @@
+BackToTop �ص�����
+RightPanel
+ThemePicker
+LangSelect 
+Tinymce �๦�ܱ༭��
+Upload ͼƬ�ϴ�
+MDinput  ��������
+sticky ճ��ͷ��
+
+PanThumb ��ҳ ͷ��
+TextHoverEffect ��ͣ��Ч����
+MarkdownEditor 
+ImageCropper�޸�ͷ��ͼƬ���.
+DropdownMenu �»��˵�
+DragSelect ��ק��ѡ��
+DndList ��ק�б�
+Kanban ��ק����
