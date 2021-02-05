@@ -3,167 +3,73 @@
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="agent" class-name="card-panel-icon"/>
-          </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              {{$t('statistics.agentCount')}}
+             已报案数量
             </div>
-            <count-to :start-val="0" :end-val="temp.agentCount" :duration="1600" class="card-panel-num"/>
+            <div class="flex-x-between">
+              <div class="card-panel-text">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_total_case" :duration="1600" class="card-panel-num"/>
+            </div>
+            <div class="flex-x-between">
+              <div class="card-panel-text">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_total_case" :duration="1600" class="card-panel-num"/>
+            </div>
           </div>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="department-staff" class-name="card-panel-icon"/>
-          </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              {{$t('statistics.departmentStaffCount')}}
+              待处理数量
             </div>
-            <count-to :start-val="0" :end-val="temp.departmentStaffCount" :duration="1500" class="card-panel-num"/>
+            <div class="flex-x-between">
+              <div class="card-panel-text">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_wait_handle" :duration="1600" class="card-panel-num"/>
+            </div>
+            <div class="flex-x-between">
+              <div class="card-panel-text">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_wait_handle" :duration="1600" class="card-panel-num"/>
+            </div>
           </div>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="owner" class-name="card-panel-icon"/>
-          </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              {{$t('statistics.ownerCount')}}
+              待评价
             </div>
-            <count-to :start-val="0" :end-val="temp.ownerCount" :duration="1400" class="card-panel-num"/>
+            <div class="flex-x-between">
+              <div class="card-panel-text">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_wait_comment" :duration="1600" class="card-panel-num"/>
+            </div>
+            <div class="flex-x-between">
+              <div class="card-panel-text">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_wait_comment" :duration="1600" class="card-panel-num"/>
+            </div>
           </div>
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="outsider" class-name="card-panel-icon"/>
-          </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              {{$t('statistics.outsiderCount')}}
+              已报案数量
             </div>
-            <count-to :start-val="0" :end-val="temp.outsiderCount" :duration="1300" class="card-panel-num"/>
+            <div class="flex-x-between">
+              <div class="card-panel-text">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_total_case" :duration="1600" class="card-panel-num"/>
+            </div>
+            <div class="flex-x-between">
+              <div class="card-panel-text">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_total_case" :duration="1600" class="card-panel-num"/>
+            </div>
           </div>
         </div>
       </el-col>
 
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="project" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.projectCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.projectCount" :duration="800" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="sold-unit" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.soldUnitCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.soldUnitCount" :duration="1000" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="message" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.messageCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.messageCount" :duration="1200" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="today-cancel-unit" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.todayCancelUnitCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.todayCancelUnitCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="extension" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.extensionCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.extensionCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="withdrawal-pending" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.withdrawalPendingCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.withdrawalPendingCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="commission-progress" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.commissionProgressCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.commissionProgressCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="recharge-pending" class-name="card-panel-icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              {{$t('statistics.rechargePendingCount')}}
-            </div>
-            <count-to :start-val="0" :end-val="temp.rechargePendingCount" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
-      </el-col>
     </el-row>
   </div>
 </template>
@@ -180,19 +86,15 @@
     data() {
       return {
         temp: {
-          agentCount: 0,
-          departmentStaffCount: 0,
-          ownerCount: 0,
-          outsiderCount: 0,
-          projectCount: 0,
-          soldUnitCount: 0,
-          messageCount: 0,
-          todayCancelUnitCount: 0,
-          extensionCount: 0,
-          withdrawalPendingCount: 0,
-          commissionProgressCount: 0,
-          rechargePendingCount: 0,
-        },
+          today_total_case: 0,
+          today_wait_handle: 0,
+          today_wait_comment: 0,
+          today_already_patrol: 0,
+          month_total_case: 0,
+          month_wait_handle: 0,
+          month_wait_comment: 0,
+          month_total_already_patrol: 0
+        }
 
       }
     },
@@ -221,7 +123,7 @@
     }
 
     .card-panel {
-      height: 108px;
+      height: 140px;
       /*cursor: pointer;*/
       font-size: 12px;
       position: relative;
@@ -285,7 +187,7 @@
       .card-panel-description {
         /*float: right;*/
         font-weight: bold;
-        margin: 26px 26px 0 0;
+        margin: 26px 26px 0 26px;
         /*margin-left: 0px;*/
         text-align: right;
 
@@ -293,8 +195,9 @@
           line-height: 18px;
           color: rgba(0, 0, 0, 0.45);
           font-size: 16px;
-          margin-bottom: 12px;
+          margin-bottom: 18px;
           word-break: keep-all;
+          text-align: center;
         }
 
         .card-panel-num {

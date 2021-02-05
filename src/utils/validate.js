@@ -46,6 +46,9 @@ export function validUpperCase(str) {
   const reg = /^[A-Z]+$/
   return reg.test(str)
 }
+export function validList(array) {
+  return array.length
+}
 
 /**
  * @param {string} str
@@ -63,6 +66,16 @@ export function validAlphabets(str) {
 export function validEmail(email) {
   const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return reg.test(email)
+}
+export const validPhone = (rule, value, callback) => {
+  if(value===''){
+    callback(new Error('请输入手机号'));
+  }else if(!(/^1[3456789]\d{9}$/.test(value))){
+    callback(new Error('手机号码有误！'));
+  }else {
+    callback()
+  }
+
 }
 
 /**

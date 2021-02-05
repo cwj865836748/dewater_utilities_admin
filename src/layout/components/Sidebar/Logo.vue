@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'EZT-CMS',
+      title: '排水管理进小区',
       logo: require('@/assets/images/logo.png')
     }
   }

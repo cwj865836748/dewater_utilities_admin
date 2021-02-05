@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'EZT-CMS',
+  title: '排水管理进小区',
 
   /**
    * @type {boolean} true | false

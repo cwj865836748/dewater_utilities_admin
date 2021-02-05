@@ -20,7 +20,7 @@ class CommonModel {
 
   statistics(params) {
     return request({
-      url: '/admin/index/statistics',
+      url: '/admin/common/statistics',
       method: 'get',
       params,
     })

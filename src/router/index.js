@@ -7,8 +7,8 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import systemRouter from './modules/system'
-
+import allRouter from './modules/system'
+const {systemRouter,userRouter,merchantRouter,inspectionRouter,caseRouter,businessRouter,areaRouter,reportRouter}= allRouter
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -104,7 +104,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
 
   /** when your routing map is too long, you can split it into small modules **/
-  systemRouter,
+  systemRouter,userRouter,merchantRouter,inspectionRouter,caseRouter,businessRouter,areaRouter,reportRouter,
 
 
   // 404 page must be placed at the end !!!

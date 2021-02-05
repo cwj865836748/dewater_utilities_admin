@@ -50,7 +50,7 @@
             clearable
             :editable="false"
             :format="formatDate"
-            value-format="timestamp"
+            value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
 

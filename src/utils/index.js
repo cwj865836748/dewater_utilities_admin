@@ -358,3 +358,27 @@ export function removeClass(ele, cls) {
 export function isAuth(key) {
   return (store.getters.permissions || '[]').indexOf(key) !== -1 || false
 }
+export const getPointsCenter = (points) => {
+  const point_num = points.length; //坐标点个数
+  let X = 0,
+    Y = 0,
+    Z = 0;
+  for (let i = 0; i < points.length; i++) {
+    let lat, lng, x, y, z;
+    lat = parseFloat(points[i].latitude) * Math.PI / 180;
+    lng = parseFloat(points[i].longitude) * Math.PI / 180;
+    x = Math.cos(lat) * Math.cos(lng);
+    y = Math.cos(lat) * Math.sin(lng);
+    z = Math.sin(lat);
+    X += x;
+    Y += y;
+    Z += z;
+  }
+  X = X / point_num;
+  Y = Y / point_num;
+  Z = Z / point_num;
+
+  const lngCenter = Math.atan2(Y, X);
+  const latCenter = Math.atan2(Z, Math.sqrt(X * X + Y * Y));
+  return {latitude:latCenter * 180 / Math.PI,longitude:lngCenter * 180 / Math.PI};
+}

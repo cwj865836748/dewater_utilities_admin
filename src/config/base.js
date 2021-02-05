@@ -50,6 +50,37 @@ export const appVersionType = [
   {label: 'iOS', value: 1, type: 'success'},
   {label: 'Android', value: 2, type: 'primary'}
 ]
+// 身份
+export const identity = [
+  {label: '市民', value: 0, type: 'success'},
+  {label: '巡检人员', value: 1, type: 'primary'}
+]
+// 是否
+export const isOkOrNo = [
+  {label: '否', value: 0, type: 'success'},
+  {label: '是', value: 1, type: 'primary'}
+]
+//案件状态
+export const caseStatus = [
+  {label: '待处理', value: 0, type: 'success'},
+  {label: '待评价', value: 1, type: 'primary'},
+  {label: '已评价', value: 2, type: 'primary'}
+]
+//巡检状态
+export const patrolStatus = [
+  {label: '进行中', value: 0, type: 'success'},
+  {label: '已结束', value: 1, type: 'primary'}
+]
+//星期
+export const weekList = [
+  {label: '周一', value: 1, type: 'success'},
+  {label: '周二', value: 2, type: 'primary'},
+  {label: '周三', value: 3, type: 'primary'},
+  {label: '周四', value: 4, type: 'success'},
+  {label: '周五', value: 5, type: 'primary'},
+  {label: '周六', value: 6, type: 'primary'},
+  {label: '周七', value: 7, type: 'primary'}
+]
 
 // 日期格式化默认为 yyyy-MM-dd HH:mm:ss
 // export const formatDate = 'dd-MM-yyyy HH:mm:ss'

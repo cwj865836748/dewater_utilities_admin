@@ -2,7 +2,7 @@
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 const CompressionPlugin = require('compression-webpack-plugin') // 压缩gzip 需nginx开启
-
+const Timestamp = new Date().getTime();
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -42,8 +42,8 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: 'http://192.168.0.24:8060',  //本地服务器
         // target: 'http://193.112.135.67:8060',  //测试服务器
-        // target: 'http://106.52.146.32:8060',  //测试服务器2
-        target: 'http://47.56.116.109:8060', //正式服务器
+        target: 'http://106.52.146.32:8092',  //测试服务器2
+        // target: 'http://47.56.116.109:8060', //正式服务器
         // secure: true,  // 如果是https接口，需要配置这个参数
         changeOrigin: true,
         pathRewrite: {
@@ -61,6 +61,10 @@ module.exports = {
         '@': resolve('src')
       }
     },
+    output: { // 输出重构  打包编译后的 文件名称  【模块名称.版本号.时间戳】
+      filename: `[name].${process.env.VUE_APP_VERSION}.${Timestamp}.js`,
+      chunkFilename: `[name].${process.env.VUE_APP_VERSION}.${Timestamp}.js`
+    },
     plugins: [
       new CompressionPlugin({
         algorithm: 'gzip',
@@ -69,7 +73,10 @@ module.exports = {
         deleteOriginalAssets: false, // 不删除源文件
         minRatio: 0.8 // 压缩比
       })
-    ]
+    ],
+    externals: {
+      TMap: 'TMap'
+    }
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
