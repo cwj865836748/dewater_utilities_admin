@@ -13,7 +13,11 @@
       <el-table-column width="120px" align="center" label="巡检人名称" prop="userName"/>
       <el-table-column width="120px" align="center" label="巡检人电话" prop="phone"/>
       <el-table-column width="200px" align="center" label="巡检开始时间" prop="startTime"/>
-      <el-table-column width="80px" align="center" label="巡检时限" prop="duringTime"/>
+      <el-table-column width="80px" align="center" label="巡检时限" >
+        <template slot-scope="{row}">
+           <span>{{row.way.totalHour}}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="80px" align="center" label="巡检状态" prop="patrolStatus">
         <template slot-scope="{row}">
           <el-tag v-if="row.patrolStatus" type="success">已结束</el-tag>
@@ -75,6 +79,10 @@
       <div class="taskTime" v-if="inspectionOne.startTime">起止时间：{{inspectionOne.startTime}}-{{inspectionOne.endTime}}</div>
       <div class="taskTime" v-else>总时长：{{inspectionOne.duringTime}}</div>
       <Map v-if="lineVisible" ref="map" type="view" :latitude="latitude" :longitude="longitude" :nodeList="nodeList"/>
+      <div class="taskTime" v-if="taskStatus">
+        <div style="margin: 10px 0;">打卡时间:</div>
+        <span class="taskDetail" v-for="(item,index) in nodeList" :key="index">{{item.nodeName}}:{{item.nodeTime}}</span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -113,7 +121,8 @@
         lineVisible:false,
         inspectionOne:{
           patrolImageArray:[]
-        }
+        },
+        taskStatus:null
       }
     },
     created() {
@@ -183,6 +192,7 @@
           this.latitude=latitude
           this.longitude=longitude
           this.nodeList=res.data.nodeList
+          this.taskStatus=row.patrolStatus
           this.$nextTick(()=>{
             this.$refs.map.init()
           })
@@ -225,5 +235,10 @@
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
+  }
+  .taskDetail {
+    font-size: 15px;
+    font-weight: bold;
+    margin-right: 10px;
   }
 </style>

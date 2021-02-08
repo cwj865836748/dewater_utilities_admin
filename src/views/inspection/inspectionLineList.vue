@@ -304,7 +304,7 @@
           this.temp.week=data.week.split(',').map(Number)
           this.multipleSelection=data.userList
           this.multipleStatus=false
-          this.timeRange = [data.startTime,data.endTime]
+          this.timeRange = data.startTime?[data.startTime,data.endTime]:''
           const {latitude, longitude} =getPointsCenter(data.nodeList)
           this.latitude=latitude
           this.longitude=longitude
@@ -322,8 +322,8 @@
       createEditData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            this.temp.startTime=this.timeRange[0]
-            this.temp.endTime=this.timeRange[1]
+            this.temp.startTime=this.timeRange?this.timeRange[0]:''
+            this.temp.endTime=this.timeRange?this.timeRange[1]:''
             if((this.temp.startTime||this.temp.endTime)&&this.temp.totalHour){
               return this.$message.error('巡检时间只能二选一')
             }
