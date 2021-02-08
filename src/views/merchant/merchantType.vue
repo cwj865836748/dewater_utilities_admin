@@ -19,16 +19,8 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="200px" align="center" label="业务名称" prop="typeName"/>
-      <el-table-column width="300px" align="center" label="维修时限" prop="totalHour"/>
-      <el-table-column width="300px" align="center" label="创建时间" prop="createTime"/>
-      <el-table-column width="160px" align="center" label="是否禁用" prop="beForbid">
-        <template slot-scope="{row}">
-          <el-tag v-if="row.beForbid" type="danger">是</el-tag>
-          <el-tag v-else type="success">否</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column width="160px" align="center" label="排序" prop="sort"/>
+      <el-table-column align="center" label="商家类型标题" prop="title"/>
+      <el-table-column align="center" label="创建时间" prop="createTime"/>
 
       <el-table-column
         :label="$t('common.actions')"
@@ -61,21 +53,8 @@
       <el-form ref="dataForm" label-position="top" :rules="rules" :model="temp">
         <el-row :gutter="60">
           <el-col :span="16" :offset="1">
-            <el-form-item label="业务名称" prop="typeName">
-              <el-input v-model.trim="temp.typeName" placeholder="请输入业务名称" clearable/>
-            </el-form-item>
-            <el-form-item label='维修时限(小时)' prop="totalHour">
-              <el-input v-model.trim="temp.totalHour" placeholder="请输入维修时限" @keyup.native="proving" clearable/>
-            </el-form-item>
-            <el-form-item label="是否禁用" prop="beForbid">
-              <el-radio-group v-model="temp.beForbid">
-                <el-radio v-for="vo in isOkOrNo" :key="vo.value" :label="vo.value">
-                  {{ vo.label }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="排序" prop="sort">
-              <el-input v-model.trim="temp.sort" placeholder="请输入排序" clearable/>
+            <el-form-item label="商家类型标题" prop="title">
+              <el-input v-model.trim="temp.title" placeholder="请输入商家类型标题" clearable/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -95,8 +74,7 @@
 <script>
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
   import Search from '@/components/Search'
-  import {Business} from '@/api'
-  import {isOkOrNo} from '@/config/base'
+  import {Merchant} from '@/api'
   import {validateRequire} from '@/utils/validate'
 
   export default {
@@ -104,7 +82,6 @@
     components: {Pagination, Search},
     data() {
       return {
-        isOkOrNo,
         list: null,
         total: 0,
         listLoading: true,
@@ -113,24 +90,16 @@
           pageSize: 10
         },
         searchFields: [
-          {type: 0, label: '业务名称', value: '', options: '', field: 'typeName'}
+          {type: 0, label: '商户类型标题', value: '', options: '', field: 'title'}
         ],
         dialogFormVisible: false,
         dialogFormStatus: 'create',
         temp: {
-          typeName: '',
-          totalHour: '',
-          beForbid: 0,
-          sort: '',
+          title: ''
         },
         rules: {
-          typeName: [
-            {required: true, trigger: 'blur', validator: validateRequire, text: '业务名称'},
-            // {type: 'email', message: this.$t('admin.tip1'), trigger: 'blur'}
-          ],
-          totalHour: [
-            {required: true, trigger: 'blur', validator: validateRequire, text: '维修时限'},
-            // {type: 'email', message: this.$t('admin.tip1'), trigger: 'blur'}
+          title: [
+            {required: true, trigger: 'blur', validator: validateRequire, text: '商户类型标题'},
           ]
         }
       }
@@ -139,11 +108,6 @@
       this.getList()
     },
     methods: {
-      proving() {
-        this.temp.totalHour = this.temp.totalHour.replace(/[^\.\d]/g,'');
-        this.temp.totalHour = this.temp.totalHour.replace('.','');
-        this.temp.totalHour = this.temp.totalHour>0?this.temp.totalHour:''
-      },
       handleSearch() {
         this.listQuery.page = 1
         this.getList()
@@ -159,7 +123,7 @@
           return acc
         }, {...this.listQuery})
 
-        Business.list(tempSearch).then(res => {
+        Merchant.merchantTypeList(tempSearch).then(res => {
           this.list = res.data.list
           this.total = res.data.totalCount
           this.listLoading = false
@@ -168,10 +132,7 @@
       // 重置
       resetTemp() {
         this.temp = {
-          typeName: '',
-          totalHour: '',
-          beForbid: 0,
-          sort: '',
+          title: ''
         }
       },
       // 创建或编辑 type create or edit
@@ -191,7 +152,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             if (this.dialogFormStatus == 'create') {
-              Business.save(this.temp).then((res) => {
+              Merchant.merchantSave(this.temp).then((res) => {
                 this.getList()
                 this.dialogFormVisible = false
                 this.$message({
@@ -202,7 +163,7 @@
             }
 
             if (this.dialogFormStatus == 'edit') {
-              Business.update(this.temp).then((res) => {
+              Merchant.merchantUpdate(this.temp).then((res) => {
                 this.getList()
                 this.dialogFormVisible = false
                 this.$message({
@@ -221,7 +182,7 @@
           cancelButtonText: this.$t('common.cancel'),
           type: 'warning'
         }).then(() => {
-          Business.delete({id:row.id}).then(res => {
+          Merchant.merchantDelete({id:row.id}).then(res => {
             const flag = --this.total % this.listQuery.pageSize
             if (!flag && this.total) this.listQuery.page--
             this.getList()

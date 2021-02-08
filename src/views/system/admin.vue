@@ -81,8 +81,8 @@
               <el-input v-model="temp.password" :placeholder="$t('common.pleaseEnter')" clearable show-password/>
               <span v-if="dialogFormStatus=='edit'" style="color: red;">{{ $t('admin.tip2') }}</span>
             </el-form-item>
-            <el-form-item label="是否管长" prop="showBidPrice">
-                <el-radio-group v-model="temp.showBidPrice">
+            <el-form-item label="是否管长" prop="battalionCommander">
+                <el-radio-group v-model="temp.battalionCommander">
                   <el-radio v-for="vo in booleanType" :key="vo.value" :label="vo.value">
                     {{ vo.label }}
                   </el-radio>
@@ -160,6 +160,7 @@
           password: '',
           status: 1,
           roleIdList: [],
+          battalionCommander:false
         },
         rules: {
           username: [
@@ -172,7 +173,7 @@
             text: this.$t('login.password')
           }, {pattern: /^[a-zA-Z0-9_-]{6,18}$/, message: this.$t('common.pwdTntensityTip')}],
           nickname: [{required: true, trigger: 'blur', validator: validateRequire, text: this.$t('admin.nickname')}],
-          phone: [
+          mobile: [
             { validator: validPhone, trigger: 'blur' }
           ]
         },
@@ -222,7 +223,8 @@
           username: '',
           password: '',
           status: 1,
-          roleIdList: []
+          roleIdList: [],
+          battalionCommander:false
         }
       },
       // 创建或编辑 type create or edit

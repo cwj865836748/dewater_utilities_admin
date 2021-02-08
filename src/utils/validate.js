@@ -75,9 +75,31 @@ export const validPhone = (rule, value, callback) => {
   }else {
     callback()
   }
-
 }
-
+export const validNodeList = (rule, value, callback) => {
+  if(!value.length) {
+    callback(new Error('请选择打卡点'))
+  }
+  else {
+    callback()
+  }
+}
+export const validWorkerList = (rule, value, callback) => {
+  if(!value.length) {
+    callback(new Error('请选择巡检人员'))
+  }
+  else {
+    callback()
+  }
+}
+export const validWeekList = (rule, value, callback) => {
+  if(!value.length) {
+    callback(new Error('请选择巡检周期'))
+  }
+  else {
+    callback()
+  }
+}
 /**
  * @param {string} str
  * @returns {Boolean}

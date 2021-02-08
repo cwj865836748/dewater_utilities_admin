@@ -86,6 +86,7 @@
   import {getPointsCenter} from '@/utils'
   import {isOkOrNo,patrolStatus} from '@/config/base'
   import Map from '@/views/map'
+  import {parseTime} from '@/utils'
   export default {
     name: '',
     components: {Pagination, Search,Map},
@@ -102,7 +103,8 @@
         searchFields: [
           {type: 0, label: '巡检编号', value: '', options: '', field: 'patrolNo'},
           {type: 1, label: '巡检状态', value: '', options: patrolStatus, field: 'patrolStatus'},
-          {type: 1, label: '是否超时', value: '', options: isOkOrNo, field: 'beTimeout'}
+          {type: 1, label: '是否超时', value: '', options: isOkOrNo, field: 'beTimeout'},
+          {type: 2, label: '时间筛选', value: '', options: '', field: 'timeRanger'}
         ],
         latitude:null,
         longitude:null,
@@ -115,10 +117,38 @@
       }
     },
     created() {
+      this.getFilter()
       this.getList()
     },
 
     methods: {
+      getFilter(){
+        let query = Object.keys(this.$route.query)
+        if(query.length){
+          if(this.$route.query.time==='today'){
+            this.searchFields[3].value=[parseTime(new Date(new Date(new Date().toLocaleDateString()).getTime()).getTime()),
+              parseTime(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1).getTime())
+            ]
+          }else {
+            var monthBefore = new Date();
+            var monthAfter  = new Date();
+            var fullYear = monthAfter.getFullYear();
+            var month = monthAfter.getMonth() + 1;
+            var endOfMonth = new Date(fullYear, month, 0).getDate();
+            monthBefore.setDate(1);
+            monthBefore.setHours(0);
+            monthBefore.setSeconds(0);
+            monthBefore.setMinutes(0);
+            monthAfter.setDate(endOfMonth)
+            monthAfter.setHours(23);
+            monthAfter.setSeconds(59);
+            monthAfter.setMinutes(59);
+            this.searchFields[3].value=[parseTime(monthBefore),
+              parseTime(monthAfter)
+            ]
+          }
+        }
+      },
       handleSearch() {
         this.listQuery.page = 1
         this.getList()
@@ -131,7 +161,8 @@
           acc[cur.field] = cur.value
           return acc
         }, {...this.listQuery})
-
+        tempSearch.startTime=tempSearch.timeRanger?tempSearch.timeRanger[0]:undefined
+        tempSearch.endTime=tempSearch.timeRanger?tempSearch.timeRanger[1]:undefined
         Inspection.list(tempSearch).then(res => {
           this.list = res.data.list
           this.total = res.data.totalCount

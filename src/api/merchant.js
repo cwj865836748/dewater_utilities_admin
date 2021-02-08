@@ -49,7 +49,8 @@ class MerchantModel {
     return request({
       url: '/admin/merchant/export',
       method: 'post',
-      data
+      data,
+      responseType: 'blob'
     })
   }
   import(data) {
@@ -61,6 +62,45 @@ class MerchantModel {
         'Content-Type': 'multipart/form-data'
       },
       isLoading: true
+    })
+  }
+  merchantTypeList(data){
+    return request({
+      url: '/admin/merchantType/list',
+      method: 'post',
+      data
+    })
+  }
+  merchantSelect(){
+    return request({
+      url: '/admin/merchantType/select',
+    })
+  }
+  merchantSave(data){
+    return request({
+      url: '/admin/merchantType/save',
+      method: 'post',
+      data
+    })
+  }
+  merchantUpdate(data){
+    return request({
+      url: '/admin/merchantType/update',
+      method: 'post',
+      data
+    })
+  }
+  merchantDelete(data){
+    return request({
+      url: '/admin/merchantType/delete',
+      method: 'post',
+      data
+    })
+  }
+  downloadMo(){
+    return request({
+      url: '/admin/merchant/download',
+      responseType: 'blob'
     })
   }
 }

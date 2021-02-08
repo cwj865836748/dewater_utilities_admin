@@ -51,7 +51,7 @@
           pageSize: 10
         },
         searchFields: [
-          {type: 0, label: '员工姓名', value: '', options: '', field: 'userName'},
+          {type: 0, label: '巡检人员姓名', value: '', options: '', field: 'userName'},
           {type: 0, label: '电话', value: '', options: '', field: 'phone'},
           {type: 0, label: '微信昵称', value: '', options: '', field: 'nickname'},
           {type: 2, label: '时间筛选', value: '', options: '', field: 'timeRanger'}

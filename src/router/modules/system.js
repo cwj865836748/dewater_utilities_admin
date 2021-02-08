@@ -13,6 +13,12 @@ const systemRouter = {
   },
   children: [
     {
+      path: 'setting',
+      component: () => import('@/views/system/setting'),
+      name: 'Setting',
+      meta: { title: 'systemSetting' }
+    },
+    {
       path: 'admin',
       component: () => import('@/views/system/admin'),
       name: 'Admin',
@@ -29,7 +35,20 @@ const systemRouter = {
       component: () => import('@/views/system/rule'),
       name: 'Rule',
       meta: { title: 'rule' }
-    }
+    },
+    {
+      path: 'log',
+      component: () => import('@/views/system/log'),
+      name: 'Log',
+      meta: { title: 'operationLog' }
+    },
+    // {
+    //   path: 'app-version',
+    //   component: () => import('@/views/system/app-version'),
+    //   name: 'AppVersion',
+    //   meta: { title: 'appVersion' }
+    // }
+
   ]
 }
 const reportRouter = {
@@ -149,6 +168,12 @@ const merchantRouter = {
       component: () => import('@/views/merchant'),
       name: '商家管理',
       meta: { title: '商家管理' }
+    },
+    {
+      path: 'merchantType',
+      component: () => import('@/views/merchant/merchantType'),
+      name: '商家类型管理',
+      meta: { title: '商家类型管理' }
     }
   ]
 }

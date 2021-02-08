@@ -9,7 +9,6 @@
         </template>
       </el-table-column>
 
-      <!--<el-table-column width="80" align="center" fixed :label="$t('common.userId')" prop="userId" sortable/>-->
       <el-table-column min-width="120px" align="center" label="姓名" prop="userName"/>
       <el-table-column width="160px" align="center" label="手机号码" prop="phone"/>
       <el-table-column width="120px" min-width="120px"  align="center" label="头像" prop="avatar">
@@ -27,9 +26,9 @@
       <el-table-column width="300px" align="center" label="绑定小区" prop="streetName">
         <template slot-scope="{row}">
           <el-popover trigger="hover" placement="top">
-            <p>{{row.streetNameList?row.streetNameList.join(','):''}}</p>
+            <p>{{row.streetList?row.streetList.map(item=>item.streetName).join(','):''}}</p>
             <div slot="reference" class="name-wrapper">
-              {{row.streetNameList?row.streetNameList.join(','):''}}
+              {{row.streetList?row.streetList.map(item=>item.streetName).join(','):''}}
             </div>
           </el-popover>
         </template>
@@ -113,7 +112,7 @@
       </div>
     </el-dialog>
     <el-dialog title="修改绑定小区" :visible.sync="updateUserStreetVisible" width="1000px" :close-on-click-modal="false">
-      <el-form ref="updateUserStreetForm" label-position="top" :model="updateUserStreetForm">
+      <el-form v-if="updateUserStreetVisible" ref="updateUserStreetForm" label-position="top" :model="updateUserStreetForm">
         <el-row>
           <el-col >
             <el-form-item label="" prop="">
@@ -143,7 +142,6 @@
                 :limit.sync="streetListQuery.pageSize"
                 @pagination="getStreetList"
               />
-
             </el-form-item>
           </el-col>
         </el-row>
@@ -270,6 +268,7 @@
           streetIdArray: [],
         },
         multipleSelection:[],
+        multipleStatus:false,
         //修改所属管长
         //管长
         adminList: null,
@@ -327,7 +326,6 @@
           acc[cur.field] = cur.value
           return acc
         }, {...this.streetListQuery})
-
         Area.list(tempSearch).then(res => {
           this.streetList = res.data.list
           this.streetTotal = res.data.totalCount
@@ -338,18 +336,17 @@
       selectTableByUserId() {
         this.$nextTick(() => {
           // userid数组
-          const userIdSelectList = this.updateUserStreetForm.streetIdArray||[]
+          const userIdSelectList = this.multipleSelection
           // 数据列表数组
           const tableData = this.streetList
           for (var i = 0; i < userIdSelectList.length; i++) {
             for (var j = 0; j < tableData.length; j++) {
-              if (userIdSelectList[i] === tableData[j].streetName) {
-                // 执行选中方法
+              if (userIdSelectList[i].streetName === tableData[j].streetName) {
                 this.$refs.streetTable.toggleRowSelection(tableData[j], true)
-                // userIdSelectList.splice(i, 1)
               }
             }
           }
+          this.multipleStatus=true
         })
       },
       //所属馆长
@@ -357,7 +354,7 @@
         this.adminListQuery.page=1
         this.getAdminList()
       },
-      getAdminList(type,row){
+      getAdminList(type){
         this.adminListLoading = true
         if (type == 1) this.adminListQuery.page = 1
         const tempSearch = this.adminSearchFields.reduce((acc, cur) => {
@@ -369,9 +366,6 @@
           this.adminList = res.data.list
           this.adminTotal = res.data.totalCount
           this.adminListLoading = false
-          if(row){
-            this.updateUserAdminForm.userId=row.belongAdmin
-          }
         })
       },
 
@@ -396,7 +390,8 @@
            this.updateUserStreetVisible=true
            this.updateUserStreetForm.userId=row.id
            this.streetListQuery.page=1
-           this.updateUserStreetForm.streetIdArray=row.streetNameList
+           this.multipleSelection=row.streetList||[]
+           this.multipleStatus=false
            this.$nextTick(()=>{
              this.$refs.streetTable.clearSelection()
            })
@@ -405,8 +400,8 @@
            this.updateUserAdminVisible=true
            this.adminListQuery.page=1
            this.updateUserAdminForm.id=row.id
-           this.updateUserAdminForm.userId=''
-           this.getAdminList('',row)
+           this.updateUserAdminForm.userId=row.belongAdmin
+           this.getAdminList()
          }
       },
       editData(type) {
@@ -474,7 +469,9 @@
         }
       },
       handleSelectRow(val) {
-        this.multipleSelection = val;
+        if(this.multipleStatus){
+          this.multipleSelection = val
+        }
       },
       handleSelectRowAdmin(row){
         this.updateUserAdminForm.userId=row.userId

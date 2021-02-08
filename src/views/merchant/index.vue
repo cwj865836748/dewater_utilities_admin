@@ -1,7 +1,7 @@
 import fileDownload from "js-file-download";
 <template>
   <div class="app-container">
-    <search ref="search" :fields="searchFields" @change="handleSearch"/>
+    <search ref="search" :fields="searchFields" @change="handleSearch" />
     <div class="filter-container flex">
       <el-button
         class="filter-item"
@@ -12,7 +12,7 @@ import fileDownload from "js-file-download";
       >
         {{ $t('common.create') }}
       </el-button>
-      <UploadXls/>
+      <UploadXls @upOut="upOut" :temOut="true" @uploadFile="uploadFile" @downMo="downMo"/>
     </div>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row stripe style="width: 100%">
@@ -23,6 +23,7 @@ import fileDownload from "js-file-download";
       </el-table-column>
       <el-table-column width="300px" align="center" label="商户门牌号" prop="houseNo"/>
       <el-table-column width="300px" align="center" label="商户名称" prop="merchantName"/>
+      <el-table-column width="150px" align="center" label="商户类型" prop="merchantType"/>
       <el-table-column width="150px" align="center" label="商户联系人	" prop="principal"/>
       <el-table-column width="150px" align="center" label="商户联系人电话	" prop="phone"/>
       <el-table-column width="150px" align="center" label="是否办理排水许可证" prop="beAllow">
@@ -71,10 +72,10 @@ import fileDownload from "js-file-download";
         <el-row :gutter="60">
           <el-col :span="14" :offset="1">
             <el-form-item label="商户门牌号" prop="houseNo">
-              <el-input v-model="temp.houseNo" placeholder="请输入商户门牌号" clearable/>
+              <el-input v-model.trim="temp.houseNo" placeholder="请输入商户门牌号" :disabled="dialogFormStatus==='edit'" clearable/>
             </el-form-item>
             <el-form-item label="商户名称" prop="merchantName">
-              <el-input v-model="temp.merchantName" placeholder="请输入商户名称" clearable/>
+              <el-input v-model.trim="temp.merchantName" placeholder="请输入商户名称" clearable/>
             </el-form-item>
             <el-form-item label="是否办理排水许可证" prop="beAllow">
               <el-radio-group v-model="temp.beAllow">
@@ -90,14 +91,21 @@ import fileDownload from "js-file-download";
                 </el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="商户类型名称" prop="merchantType">
-              <el-input v-model="temp.merchantType" placeholder="请输入商户类型名称" clearable/>
+            <el-form-item label="商户类型" prop="merchantTypeId">
+              <el-select v-model="temp.merchantTypeId" placeholder="请选择" clearable>
+                <el-option
+                  v-for="item in mechantTypeList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="商户联系人" prop="principal">
-              <el-input v-model="temp.principal" placeholder="请输入商户联系人" clearable/>
+              <el-input v-model.trim="temp.principal" placeholder="请输入商户联系人" clearable/>
             </el-form-item>
             <el-form-item label="商户联系人电话" prop="phone">
-              <el-input v-model="temp.phone" placeholder="请输入商户联系人电话" clearable/>
+              <el-input v-model.trim="temp.phone" placeholder="请输入商户联系人电话" clearable/>
             </el-form-item>
             <el-form-item label="是否显示" prop="beDisplay">
               <el-radio-group v-model="temp.beDisplay">
@@ -128,6 +136,7 @@ import fileDownload from "js-file-download";
         </el-table-column>
         <el-table-column width="300px" align="center" label="商户门牌号" prop="houseNo"/>
         <el-table-column width="300px" align="center" label="商户名称" prop="merchantName"/>
+        <el-table-column width="150px" align="center" label="商户类型" prop="merchantType"/>
         <el-table-column width="150px" align="center" label="商户联系人	" prop="principal"/>
         <el-table-column width="150px" align="center" label="商户联系人电话	" prop="phone"/>
         <el-table-column width="150px" align="center" label="是否办理排水许可证" prop="beAllow">
@@ -184,10 +193,11 @@ import fileDownload from "js-file-download";
         searchFields: [
           {type: 0, label: '商户门牌号', value: '', options: '', field: 'houseNo'},
           {type: 0, label: '商户名称', value: '', options: '', field: 'merchantName'},
-          {type: 0, label: '商户类型名称', value: '', options: '', field: 'merchantType'},
+          {type: 1, label: '商户类型', value: '', options: '', field: 'merchantType'},
           {type: 0, label: '商户联系人', value: '', options: '', field: 'principal'},
           {type: 0, label: '商户联系人电话', value: '', options: '', field: 'phone'},
-          {type: 1, label: '是否办理排水许可证', value: '', options: [{label:'否',value:0},{label:'是',value:1}], field: 'beAllow'},
+          {type: 1, label: '是否办理排水许可证', value: '', options: isOkOrNo, field: 'beAllow'},
+          {type: 1, label: '是否安装预处理设施', value: '', options: isOkOrNo, field: 'beInstall'},
         ],
         dialogFormVisible: false,
         dialogFormStatus: 'create',
@@ -196,7 +206,7 @@ import fileDownload from "js-file-download";
           merchantName: '',
           beAllow: 1,
           beInstall: 1,
-          merchantType: '',
+          merchantTypeId: '',
           principal: '',
           phone: '',
           beDisplay: 1,
@@ -208,8 +218,8 @@ import fileDownload from "js-file-download";
           merchantName: [
             {required: true, trigger: 'blur', validator: validateRequire, text: '商户名称'},
           ],
-          merchantType: [
-            {required: true, trigger: 'blur', validator: validateRequire, text: '商户类型名称'},
+          merchantTypeId: [
+            {required: true, trigger: 'blur', validator: validateRequire, text: '商户类型'},
           ],
           principal: [
             {required: true, trigger: 'blur', validator: validateRequire, text: '商户联系人'},
@@ -227,16 +237,25 @@ import fileDownload from "js-file-download";
           pageSize: 10,
           houseNo:''
         },
-        historyVisible:false
+        historyVisible:false,
+        mechantTypeList:[]
       }
+
     },
     created() {
       this.getList()
+      this.getMechantTypeList()
     },
     methods: {
       handleSearch() {
         this.listQuery.page = 1
         this.getList()
+      },
+      getMechantTypeList(){
+        Merchant.merchantSelect().then(res=>{
+          this.mechantTypeList=res.data.map(item=>{return{label:item.title,value:item.id}})
+          this.searchFields[2].options=res.data.map(item=>{return{label:item.title,value:item.title}})
+        })
       },
       // 获取数据
       getList(type) {
@@ -346,35 +365,42 @@ import fileDownload from "js-file-download";
           this.historyListLoading = false
         })
       },
-      // uploadFile(file){
-      //   return new Promise((resolve, reject) => {
-      //     const formData = new FormData()
-      //     formData.append('file', file.file)
-      //     formData.append('areaId', this.gridDetail.area)
-      //     formData.append('gridId', this.gridDetail.gridId)
-      //     houseApi.exportXls(formData).then((res) => {
-      //       let buf = new Buffer(res).toString();
-      //       //判断大小 小于80即有错误码，判断
-      //       if (buf.length <= 80) {
-      //         this.$message({
-      //           message: '导入成功',
-      //           type: 'success'
-      //         })
-      //         this.getGridInfo()
-      //         this.getGridFloorList()
-      //       }else {
-      //         fileDownload(res, `模板导入失败.xls`);
-      //         this.$message({
-      //           message: '导入失败',
-      //           type: 'error'
-      //         })
-      //       }
-      //       resolve(true)
-      //     }).catch(err => {
-      //       reject(false)
-      //     })
-      //   })
-      // }
+      uploadFile(file){
+        // return new Promise((resolve, reject) => {
+          const formData = new FormData()
+          formData.append('file', file.file)
+          Merchant.import(formData).then((res) => {
+            if(res.code===200){
+              this.$message({
+                message: '导入成功',
+                type: 'success'
+            })
+              this.handleSearch()
+            }else {
+              // fileDownload(res, `模板导入失败.xls`);
+              this.$message({
+                message: '导入失败',
+                type: 'error'
+              })
+            }
+          //   resolve(true)
+          // }).catch(err => {
+          //   reject(false)
+          // })
+        })
+      },
+      async upOut(){
+        const tempSearch = this.searchFields.reduce((acc, cur) => {
+          acc[cur.field] = cur.value
+          return acc
+        }, {...this.listQuery})
+        const data = await Merchant.export(tempSearch)
+        fileDownload(data, `商户报表.xls`);
+      },
+      async downMo(){
+        const data = await Merchant.downloadMo()
+        fileDownload(data, `商家导入模板.xls`);
+      }
     }
   }
 </script>

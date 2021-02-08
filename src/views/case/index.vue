@@ -11,6 +11,7 @@ import fileDownload from "js-file-download";
           {{ (listQuery.page - 1) * listQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
+      <el-table-column width="300px" align="center" label="案件编码" prop="caseNo"/>
       <el-table-column width="150px" align="center" label="上报人昵称" prop="nickname"/>
       <el-table-column width="150px" align="center" label="上报人电话" prop="phone"/>
       <el-table-column width="200px" align="center" label="小区名称" prop="streetName"/>
@@ -42,8 +43,8 @@ import fileDownload from "js-file-download";
       </el-table-column>
       <el-table-column width="80px" align="center" label="是否满意" prop="beSatisfied">
         <template slot-scope="{row}">
-          <el-tag v-if="row.beInstall" type="success">是</el-tag>
-          <el-tag v-else type="danger">否</el-tag>
+          <el-tag v-if="row.beSatisfied===1" type="success">是</el-tag>
+          <el-tag v-else-if="row.beSatisfied===0" type="danger">否</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -79,7 +80,7 @@ import fileDownload from "js-file-download";
       <div v-if="dialogType!==2">
         <div class="desc">文字描述：{{caseMsg}}</div>
         <div>
-        <img class="descImg" v-for="(item,index) in caseImgList" :key="index" :src="item"/>
+        <img class="descImg" v-for="(item,index) in caseImgList" :key="index" :src="item" @click="seeBigPic(item)"/>
       </div>
       </div>
       <div v-else>
@@ -87,6 +88,14 @@ import fileDownload from "js-file-download";
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogFormVisible = false">
+          {{ $t('common.confirm') }}
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="查看大图" width="1200px" :visible.sync="bigPicVisible" :close-on-click-modal="false" :append-to-body="true">
+      <img :src="bigPic" style="width: 100%;height: 100%">
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="bigPicVisible = false">
           {{ $t('common.confirm') }}
         </el-button>
       </div>
@@ -102,6 +111,7 @@ import fileDownload from "js-file-download";
   import UploadXls from "@/components/UploadFile/UploadXls";
   import Map from "@/views/map"
   import fileDownload from "js-file-download"
+  import {parseTime} from '@/utils'
   export default {
     name: '',
     components: {Pagination, Search,UploadXls,Map},
@@ -122,7 +132,8 @@ import fileDownload from "js-file-download";
           {type: 0, label: '小区名称', value: '', options: '', field: 'streetName'},
           {type: 1, label: '案件状态', value: '', options: caseStatus, field: 'caseStatus'},
           {type: 1, label: '是否超时', value: '', options: isOkOrNo, field: 'beTimeout'},
-          {type: 1, label: '是否满意', value: '', options: isOkOrNo, field: 'beSatisfied'}
+          {type: 1, label: '是否满意', value: '', options: isOkOrNo, field: 'beSatisfied'},
+          {type: 2, label: '时间筛选', value: '', options: '', field: 'timeRanger'}
         ],
         dialogFormVisible: false,
         caseStatusTitle:'查看上报信息',
@@ -130,18 +141,50 @@ import fileDownload from "js-file-download";
         caseImgList:[],
         dialogType:0,
         latitude:null,
-        longitude:null
+        longitude:null,
+        bigPicVisible:false,
+        bigPic:null
       }
     },
     created() {
+      this.getFilter()
       this.getList()
     },
     methods: {
+      getFilter(){
+        let query = Object.keys(this.$route.query)
+        if(query.length){
+          if(this.$route.query.time==='today'){
+            this.searchFields[7].value=[parseTime(new Date(new Date(new Date().toLocaleDateString()).getTime()).getTime()),
+              parseTime(new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1).getTime())
+            ]
+          }else {
+            var monthBefore = new Date();
+            var monthAfter  = new Date();
+            var fullYear = monthAfter.getFullYear();
+            var month = monthAfter.getMonth() + 1;
+            var endOfMonth = new Date(fullYear, month, 0).getDate();
+            monthBefore.setDate(1);
+            monthBefore.setHours(0);
+            monthBefore.setSeconds(0);
+            monthBefore.setMinutes(0);
+            monthAfter.setDate(endOfMonth)
+            monthAfter.setHours(23);
+            monthAfter.setSeconds(59);
+            monthAfter.setMinutes(59);
+            this.searchFields[7].value=[parseTime(monthBefore),
+              parseTime(monthAfter)
+            ]
+          }
+          this.searchFields[4].value = parseInt(this.$route.query.status)===4?'':parseInt(this.$route.query.status)
+        }
+      },
+
       handleSearch() {
         this.listQuery.page = 1
         this.getList()
       },
-      // 获取数据
+      // 获取数据endOfMonth
       getList(type) {
         this.listLoading = true
         if (type == 1) this.listQuery.page = 1
@@ -150,7 +193,8 @@ import fileDownload from "js-file-download";
           acc[cur.field] = cur.value
           return acc
         }, {...this.listQuery})
-
+        tempSearch.startCreateTime=tempSearch.timeRanger?tempSearch.timeRanger[0]:undefined
+        tempSearch.endCreateTime=tempSearch.timeRanger?tempSearch.timeRanger[1]:undefined
         Case.list(tempSearch).then(res => {
           this.list = res.data.list
           this.total = res.data.totalCount
@@ -181,6 +225,10 @@ import fileDownload from "js-file-download";
         }, {...this.listQuery})
         const data = await Case.export(tempSearch)
         fileDownload(data, `案件报表.xls`);
+      },
+      seeBigPic(pic){
+         this.bigPic=pic
+         this.bigPicVisible=true
       }
     }
   }

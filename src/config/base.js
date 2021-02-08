@@ -79,7 +79,7 @@ export const weekList = [
   {label: '周四', value: 4, type: 'success'},
   {label: '周五', value: 5, type: 'primary'},
   {label: '周六', value: 6, type: 'primary'},
-  {label: '周七', value: 7, type: 'primary'}
+  {label: '周日', value: 7, type: 'primary'}
 ]
 
 // 日期格式化默认为 yyyy-MM-dd HH:mm:ss

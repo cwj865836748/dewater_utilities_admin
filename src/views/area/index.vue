@@ -22,9 +22,9 @@
       <el-table-column min-width="500px"align="center" label="巡检人员名称" prop="workerName">
         <template slot-scope="{row}">
           <el-popover trigger="hover" placement="top">
-            <p>{{row.workerName?row.workerName.join(','):''}}</p>
+            <p>{{row.userList?row.userList.map(item=>item.userName).join(','):''}}</p>
             <div slot="reference" class="name-wrapper">
-              {{row.workerName?row.workerName.join(','):''}}
+              {{row.userList?row.userList.map(item=>item.userName).join(','):''}}
             </div>
           </el-popover>
         </template>
@@ -164,7 +164,9 @@
         userSearchFields: [
           {type: 0, label: '巡检人员名称', value: '', options: '', field: 'userName'},
           {type: 0, label: '巡检人员电话', value: '', options: '', field: 'phone'}
-        ]
+        ],
+        multipleSelection:[],
+        multipleStatus:false
       }
     },
     created() {
@@ -207,24 +209,25 @@
           this.userList = res.data.list
           this.userTotal = res.data.totalCount
           this.userListLoading = false
-          this.dialogFormStatus==='edit'&&this.selectTableByUserId()
+          this.selectTableByUserId()
         })
       },
       selectTableByUserId() {
         this.$nextTick(() => {
           // userid数组
-          const userIdSelectList = this.temp.workerName
+          const userIdSelectList = this.multipleSelection
           // 数据列表数组
           const tableData = this.userList
           for (var i = 0; i < userIdSelectList.length; i++) {
             for (var j = 0; j < tableData.length; j++) {
-              if (userIdSelectList[i] === tableData[j].userName) {
+              if (userIdSelectList[i].userName === tableData[j].userName) {
                 // 执行选中方法
                 this.$refs.multipleTable.toggleRowSelection(tableData[j], true)
                 // userIdSelectList.splice(i, 1)
               }
             }
           }
+          this.multipleStatus=true
         })
       },
       // 重置
@@ -240,6 +243,8 @@
         if (type == 'create') this.resetTemp()
         if (type == 'edit') {
           this.temp = JSON.parse(JSON.stringify(row))
+          this.multipleSelection=this.temp.userList||[]
+          this.multipleStatus=false
         }
         this.dialogFormVisible = true
         this.$nextTick(() => {
@@ -254,11 +259,11 @@
       createEditData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            if(!this.temp.workerIdArray.length){
+            if(!this.multipleSelection.length){
               return this.$message.error(
                  '绑定人员不能为空')
             }
-            this.temp.workerIdArray=this.temp.workerIdArray.map(item=>item.id)
+            this.temp.workerIdArray=this.multipleSelection.map(item=>item.id)
             if (this.dialogFormStatus == 'create') {
               Area.save(this.temp).then((res) => {
                 this.getList()
@@ -307,7 +312,10 @@
         })
       },
       handleSelectRow(val) {
-        this.temp.workerIdArray = val
+        if(this.multipleStatus){
+          this.temp.multipleSelection = val
+        }
+
       }
     }
   }

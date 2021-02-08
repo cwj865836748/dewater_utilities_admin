@@ -21,8 +21,8 @@
 
       <!--<el-table-column width="80" align="center" fixed :label="$t('common.userId')" prop="userId" sortable/>-->
       <el-table-column width="300px" align="center" label="路线标题	" prop="wayTitle"/>
-      <el-table-column width="160px" align="center" label="起始时间" prop="startTime	"/>
-      <el-table-column width="160px" align="center" label="结束时间" prop="endTime"/>
+      <el-table-column width="160px" align="center" label="起始时间" prop="startTimeStr"/>
+      <el-table-column width="160px" align="center" label="结束时间" prop="endTimeStr"/>
       <el-table-column width="120px" align="center" label="总巡检时长(小时)" prop="totalHour"/>
       <el-table-column width="120px" align="center" label="巡检人员数量" prop="workerNum">
         <template slot-scope="{row}">
@@ -54,6 +54,9 @@
           <el-button type="primary" size="small" @click="getInspectionLine(row)" >
             巡检路线
           </el-button>
+          <el-button type="primary" size="small" @click="getInspectionDown(row)" >
+            下载巡检路线二维码
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,31 +78,33 @@
             <el-form-item label="打卡点标记" prop="nodeList">
              <Map v-if="dialogFormVisible" ref="map" :latitude="latitude" :longitude="longitude" :nodeList="temp.nodeList" :isSetNode="true" @getNode="getNode" @closeNodeList="closeNodeList"/>
             </el-form-item>
-            <search ref="search" :fields="userSearchFields" @change="handleUserSearch"/>
-            <el-table ref="multipleTable" row-key="id" @selection-change="handleSelectRow" v-loading="userListLoading" :data="userList" border fit highlight-current-row stripe style="width: 100%">
-              <el-table-column
+            <el-form-item label="绑定巡检人员">
+              <search ref="search" :fields="userSearchFields" @change="handleUserSearch"/>
+              <el-table ref="multipleTable" row-key="id" @selection-change="handleSelectRow" v-loading="userListLoading" :data="userList" border fit highlight-current-row stripe style="width: 100%">
+                <el-table-column
                 type="selection"
                 :reserve-selection="true"
                 width="55">
-              </el-table-column>
-              <el-table-column width="80" align="center" fixed :label="$t('common.serial')">
-                <template slot-scope="scope">
+                </el-table-column>
+                <el-table-column width="80" align="center" fixed :label="$t('common.serial')">
+                  <template slot-scope="scope">
                   {{ (userListQuery.page - 1) * userListQuery.pageSize + scope.$index + 1 }}
-                </template>
-              </el-table-column>
+                  </template>
+                </el-table-column>
 
               <!--<el-table-column width="80" align="center" fixed :label="$t('common.userId')" prop="userId" sortable/>-->
-              <el-table-column  align="center" label="巡检人员姓名" prop="userName"/>
-              <el-table-column align="center" label="巡检人员电话" prop="phone"/>
-            </el-table>
+                <el-table-column  align="center" label="巡检人员姓名" prop="userName"/>
+                <el-table-column align="center" label="巡检人员电话" prop="phone"/>
+              </el-table>
 
-            <pagination
+              <pagination
               v-show="userTotal>0"
               :total="userTotal"
               :page.sync="userListQuery.page"
               :limit.sync="userListQuery.pageSize"
               @pagination="getUserList"
-            />
+              />
+            </el-form-item>
             <el-form-item label="巡检周期" prop="week">
               <el-checkbox-group v-model="temp.week">
                 <el-checkbox v-for="vo in weekList" :key="vo.value" :label="vo.value">
@@ -123,7 +128,7 @@
                 </el-time-picker>
               </el-form-item>
               <el-form-item label="固定总巡检时间(小时)">
-                <el-input v-model="temp.totalHour" placeholder="请输入固定总巡检时间" clearable/>
+                <el-input v-model="temp.totalHour" placeholder="请输入固定总巡检时间" clearable @keyup.native="proving"/>
               </el-form-item>
             </el-form-item>
             <el-form-item label="是否展示" prop="beDisplay">
@@ -171,7 +176,7 @@
   import Search from '@/components/Search'
   import Map from '@/views/map'
   import {User,Inspection} from '@/api'
-  import {validateRequire} from '@/utils/validate'
+  import {validWeekList,validNodeList,validateRequire,validWorkerList} from '@/utils/validate'
   import {getPointsCenter} from '@/utils'
   import {isOkOrNo,weekList} from '@/config/base'
   export default {
@@ -207,7 +212,13 @@
         rules: {
           wayTitle: [
             {required: true, trigger: 'blur', validator: validateRequire, text: '路线标题'},
-          ]
+          ],
+          nodeList: [
+            { validator: validNodeList, trigger: 'blur' }
+          ],
+        week:[
+          { validator: validWeekList, trigger: 'blur' }
+        ]
         },
         //巡检路线详情
         lineVisible:false,
@@ -231,6 +242,8 @@
           {type: 0, label: '巡检人员名称', value: '', options: '', field: 'userName'},
           {type: 0, label: '巡检人员电话', value: '', options: '', field: 'phone'}
         ],
+        multipleSelection:[],
+        multipleStatus:false
       }
     },
     created() {
@@ -273,6 +286,11 @@
           nodeList:[]
         }
       },
+      proving() {
+        this.temp.totalHour = this.temp.totalHour.replace(/[^\.\d]/g,'');
+        this.temp.totalHour = this.temp.totalHour.replace('.','');
+        this.temp.totalHour = this.temp.totalHour>0?this.temp.totalHour:''
+      },
       // 创建或编辑 type create or edit
       async handleCreateEdit(type, row) {
         this.dialogFormVisible = true
@@ -285,6 +303,8 @@
           const {data} = await Inspection.lineInfo({id: row.id})
           this.temp = data
           this.temp.week=data.week.split(',').map(Number)
+          this.multipleSelection=data.userList
+          this.multipleStatus=false
           const {latitude, longitude} =getPointsCenter(data.nodeList)
           this.latitude=latitude
           this.longitude=longitude
@@ -294,27 +314,25 @@
         this.getUserList()
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
+          this.$refs.multipleTable.clearSelection()
           this.$refs.map.init()
         })
       },
       // 确定创建或编辑
       createEditData() {
         this.$refs['dataForm'].validate((valid) => {
-          if(!this.temp.nodeList.length){
-            return this.$message.error('请选择巡检路线打卡点')
-          }
-          if(!this.temp.workerIdArray.length){
-            return this.$message.error('请选择巡检人员')
-          }
-          if(!this.temp.week.length){
-            return this.$message.error('请选择巡检周期')
-          }
-          if(!this.temp.startTime&&!this.temp.endTime&&!this.temp.totalHour){
-            return this.$message.error('请设置巡检时间')
-          }
-          this.temp.week=this.temp.week.join(',')
-          this.temp.workerIdArray=this.temp.workerIdArray.map(item=>item.id)
           if (valid) {
+            if((this.temp.startTime||this.temp.endTime)&&this.temp.totalHour){
+              return this.$message.error('巡检时间只能二选一')
+            }
+            if((!this.temp.startTime||!this.temp.endTime)&&!this.temp.totalHour){
+              return this.$message.error('请设置规范的开始时间和结束时间')
+            }
+            if(!this.multipleSelection.length){
+              return this.$message.error('请选择绑定人员')
+            }
+            this.temp.week=this.temp.week.join(',')
+            this.temp.workerIdArray=this.multipleSelection.map(item=>item.id)
             if (this.dialogFormStatus == 'create') {
               Inspection.save(this.temp).then((res) => {
                 this.getList()
@@ -413,28 +431,49 @@
           this.userList = res.data.list
           this.userTotal = res.data.totalCount
           this.userListLoading = false
+          this.selectTableByUserId()
         })
       },
       selectTableByUserId() {
         this.$nextTick(() => {
-          // userid数组
-          const userIdSelectList = this.temp.workerName
+          //数组
+          const userIdSelectList = this.multipleSelection
           // 数据列表数组
-          const tableData = this.userList
+          const tableData = this.userList||[]
           for (var i = 0; i < userIdSelectList.length; i++) {
             for (var j = 0; j < tableData.length; j++) {
-              if (userIdSelectList[i] === tableData[j].userName) {
+              if (userIdSelectList[i].userName=== tableData[j].userName) {
                 // 执行选中方法
                 this.$refs.multipleTable.toggleRowSelection(tableData[j], true)
-                // userIdSelectList.splice(i, 1)
               }
             }
           }
+          this.multipleStatus=true
         })
       },
       handleSelectRow(val) {
-        this.temp.workerIdArray = val
+        if(this.multipleStatus){
+          this.multipleSelection = val
+        }
       },
+      getInspectionDown(row){
+        Inspection.lineInfo({id:row.id}).then(res => {
+          const nodeList = res.data.nodeList
+          for(let i = 0;i<nodeList.length;i++) {
+            this.downloadFile(nodeList[i].qrImage)
+          }
+        })
+      },
+      downloadFile (url)  {
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none"; // 防止影响页面
+      iframe.style.height = 0; // 防止影响页面
+      iframe.src = url;
+      document.body.appendChild(iframe); // 这一行必须，iframe挂在到dom树上才会发请求
+      setTimeout(()=>{
+        iframe.remove();
+       }, 5 * 60 * 1000);
+     }
     }
   }
 </script>

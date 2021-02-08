@@ -11,7 +11,7 @@
 
       <div class="title-container">
         <h3 class="title">
-          {{ $t('login.title') }}
+          排水管理进小区
         </h3>
         <lang-select class="set-language"/>
       </div>

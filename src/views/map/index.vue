@@ -2,7 +2,7 @@
   <div>
     <el-tag v-if="isSetNode" v-for="(item,index) in nodeList" :key="index" closable @click.native="upDateNode(item,index)" @close="closeNodeList(index)">{{item.nodeName}}</el-tag>
     <div id="map" :style="{width: width,height: height}"></div>
-    <el-dialog title="巡检人员列表" :visible.sync="dialogFormVisible" width="500px" :append-to-body="true">
+    <el-dialog title="设置打卡点" :visible.sync="dialogFormVisible" width="500px" :append-to-body="true" :close-on-click-modal="false">
       <el-form ref="dataForm" label-position="top" :rules="rules" :model="temp">
         <el-row :gutter="60">
           <el-col>
