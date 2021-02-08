@@ -92,7 +92,7 @@ import fileDownload from "js-file-download";
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="查看大图" width="1200px" :visible.sync="bigPicVisible" :close-on-click-modal="false" :append-to-body="true">
+    <el-dialog title="查看大图" width="600px" :visible.sync="bigPicVisible" :close-on-click-modal="false" :append-to-body="true">
       <img :src="bigPic" style="width: 100%;height: 100%">
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="bigPicVisible = false">
