@@ -2,17 +2,17 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item" type="primary" icon="el-icon-edit"
-                 @click="handleCreateCate"
-                 v-if="isAuth('sys:config:addCategory')"
-      >
-        {{ $t('setting.createCategory') }}
-      </el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-edit"
-                 @click="handleCreate"
-                 v-if="isAuth('sys:config:save')">
-        {{ $t('setting.createSetting') }}
-      </el-button>
+<!--      <el-button class="filter-item" type="primary" icon="el-icon-edit"-->
+<!--                 @click="handleCreateCate"-->
+<!--                 v-if="isAuth('sys:config:addCategory')"-->
+<!--      >-->
+<!--        {{ $t('setting.createCategory') }}-->
+<!--      </el-button>-->
+<!--      <el-button class="filter-item" type="primary" icon="el-icon-edit"-->
+<!--                 @click="handleCreate"-->
+<!--                 v-if="isAuth('sys:config:save')">-->
+<!--        {{ $t('setting.createSetting') }}-->
+<!--      </el-button>-->
     </div>
 
     <el-tabs v-loading="listLoading" type="border-card" @tab-click="changeTab">
@@ -22,19 +22,19 @@
 
           <el-row v-for="(vo,ko) in list" :key="ko" :gutter="30">
             <el-col :span="14">
-              <el-form-item :label="vo.configTitle">
+              <el-form-item :label="vo.descript">
 
                 <el-input
                   v-if="vo.type==0"
-                  v-model="vo.value"
+                  v-model="vo.configValue"
                   :placeholder="$t('common.pleaseEnter')"
                   clearable
                 />
-                <textarea rows="4" class="el-textarea__inner" v-if="vo.type==1" v-model="vo.value"
+                <textarea rows="4" class="el-textarea__inner" v-if="vo.type==1" v-model="vo.configValue"
                           :placeholder="$t('common.pleaseEnter')"/>
                 <!--<el-input-->
                 <!--v-if="vo.type==1"-->
-                <!--v-model="vo.value"-->
+                <!--v-model="vo.configValue"-->
                 <!--type="textarea"-->
                 <!--:placeholder="$t('common.pleaseEnter')"-->
                 <!--clearable-->
@@ -42,12 +42,12 @@
                 <!--/>-->
                 <el-input
                   v-if="vo.type==2"
-                  v-model.number="vo.value"
+                  v-model.number="vo.configValue"
                   :placeholder="$t('common.pleaseEnter')"
                   clearable
                 />
-                <el-radio-group v-if="vo.type==3" v-model="vo.value">
-                  <el-radio v-for="vo in booleanType" :key="vo.value" :label="vo.value+''">
+                <el-radio-group v-if="vo.type==3" v-model="vo.configValue">
+                  <el-radio v-for="vo in booleanType" :key="vo.configValue" :label="vo.configValue+''">
                     {{ vo.label }}
                   </el-radio>
                 </el-radio-group>
@@ -62,11 +62,11 @@
                   :before-upload="beforeUploadHandle"
                   :data-id="vo.id"
                 >
-                  <img v-if="vo.value" :src="vo.value" class="avatar">
+                  <img v-if="vo.configValue" :src="vo.configValue" class="avatar">
                   <i v-else class="el-icon-plus avatar-uploader-icon"/>
                 </el-upload>
 
-                <tinymce v-if="vo.type==8" v-model="vo.value" :height="300"/>
+                <tinymce v-if="vo.type==8" v-model="vo.configValue" :height="300"/>
               </el-form-item>
             </el-col>
             <el-col :span="4">
@@ -122,10 +122,10 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('setting.title')" prop="title">
-              <el-input v-model="temp.title" :placeholder="$t('common.pleaseEnter')" clearable/>
+              <el-input v-model="temp.configTitle" :placeholder="$t('common.pleaseEnter')" clearable/>
             </el-form-item>
             <el-form-item :label="$t('setting.name')" prop="name">
-              <el-input v-model="temp.name" :placeholder="$t('common.pleaseEnter')" clearable/>
+              <el-input v-model="temp.configName" :placeholder="$t('common.pleaseEnter')" clearable/>
             </el-form-item>
             <el-form-item :label="$t('setting.type')" prop="type">
               <el-select
@@ -150,7 +150,7 @@
             <!--<el-input v-if="temp.type==2" :placeholder="$t('common.pleaseEnter')"-->
             <!--v-model.number="temp.value" clearable/>-->
             <!--<el-radio-group v-if="temp.type==3" v-model="temp.value">-->
-            <!--<el-radio v-for="vo in booleanType" :label="vo.value" :key="vo.value">-->
+            <!--<el-radio v-for="vo in booleanType" :label="vo.configValue" :key="vo.configValue">-->
             <!--{{vo.label}}-->
             <!--</el-radio>-->
             <!--</el-radio-group>-->
