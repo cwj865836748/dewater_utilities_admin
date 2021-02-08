@@ -75,6 +75,30 @@
             <el-form-item label="路线标题" prop="wayTitle">
               <el-input v-model="temp.wayTitle" placeholder="请输入路线标题" clearable/>
             </el-form-item>
+            <el-form-item label="巡检周期" prop="week">
+              <el-checkbox-group v-model="temp.week">
+                <el-checkbox v-for="vo in weekList" :key="vo.value" :label="vo.value">
+                  {{ vo.label }}
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="巡检时间设置(2选1)">
+              <el-form-item label="开始时间-结束时间">
+                <el-time-picker
+                  is-range
+                  v-model="timeRange"
+                  range-separator="至"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  format="HH:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  placeholder="选择时间范围">
+                </el-time-picker>
+              </el-form-item>
+              <el-form-item label="固定总巡检时间(小时)">
+                <el-input v-model="temp.totalHour" placeholder="请输入固定总巡检时间" clearable @keyup.native="proving"/>
+              </el-form-item>
+            </el-form-item>
             <el-form-item label="打卡点标记" prop="nodeList">
              <Map v-if="dialogFormVisible" ref="map" :latitude="latitude" :longitude="longitude" :nodeList="temp.nodeList" :isSetNode="true" @getNode="getNode" @closeNodeList="closeNodeList"/>
             </el-form-item>
@@ -104,32 +128,6 @@
               :limit.sync="userListQuery.pageSize"
               @pagination="getUserList"
               />
-            </el-form-item>
-            <el-form-item label="巡检周期" prop="week">
-              <el-checkbox-group v-model="temp.week">
-                <el-checkbox v-for="vo in weekList" :key="vo.value" :label="vo.value">
-                  {{ vo.label }}
-                </el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-            <el-form-item label="巡检时间设置(2选1)">
-              <el-form-item label="开始时间-结束时间">
-                <el-time-picker
-                  v-model="temp.startTime"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="请选择开始时间">
-                </el-time-picker>
-                至
-                <el-time-picker
-                  v-model="temp.endTime"
-                  type="datetime"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="请选择结束时间">
-                </el-time-picker>
-              </el-form-item>
-              <el-form-item label="固定总巡检时间(小时)">
-                <el-input v-model="temp.totalHour" placeholder="请输入固定总巡检时间" clearable @keyup.native="proving"/>
-              </el-form-item>
             </el-form-item>
             <el-form-item label="是否展示" prop="beDisplay">
               <el-radio-group v-model="temp.beDisplay">
@@ -243,7 +241,8 @@
           {type: 0, label: '巡检人员电话', value: '', options: '', field: 'phone'}
         ],
         multipleSelection:[],
-        multipleStatus:false
+        multipleStatus:false,
+        timeRange:null
       }
     },
     created() {
@@ -305,6 +304,7 @@
           this.temp.week=data.week.split(',').map(Number)
           this.multipleSelection=data.userList
           this.multipleStatus=false
+          this.timeRange = [data.startTime,data.endTime]
           const {latitude, longitude} =getPointsCenter(data.nodeList)
           this.latitude=latitude
           this.longitude=longitude
@@ -322,6 +322,8 @@
       createEditData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.temp.startTime=this.timeRange[0]
+            this.temp.endTime=this.timeRange[1]
             if((this.temp.startTime||this.temp.endTime)&&this.temp.totalHour){
               return this.$message.error('巡检时间只能二选一')
             }

@@ -37,8 +37,8 @@ import fileDownload from "js-file-download";
       </el-table-column>
       <el-table-column width="80px" align="center" label="是否超时" prop="beTimeout">
         <template slot-scope="{row}">
-          <el-tag v-if="row.beTimeout" type="success">是</el-tag>
-          <el-tag v-else type="danger">否</el-tag>
+          <el-tag v-if="row.beTimeout" type="danger">是</el-tag>
+          <el-tag v-else type="success">否</el-tag>
         </template>
       </el-table-column>
       <el-table-column width="80px" align="center" label="是否满意" prop="beSatisfied">
@@ -224,7 +224,7 @@ import fileDownload from "js-file-download";
           return acc
         }, {...this.listQuery})
         const data = await Case.export(tempSearch)
-        fileDownload(data, `案件报表.xls`);
+        fileDownload(data, `案件报表.xlsx`);
       },
       seeBigPic(pic){
          this.bigPic=pic

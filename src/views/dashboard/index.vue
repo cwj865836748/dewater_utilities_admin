@@ -137,7 +137,7 @@
       },
       goInspection(time){
         this.$router.push({
-          path:'/inspectionList',
+          path:'/inspectionList/inspectionList',
           query:{
             time
           }

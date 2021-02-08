@@ -151,6 +151,7 @@ import fileDownload from "js-file-download";
             <el-tag v-else type="danger">否</el-tag>
           </template>
         </el-table-column>
+        <el-table-column width="200px" align="center" label="修改时间	" prop="updateTime"/>
       </el-table>
 
       <pagination
@@ -395,11 +396,11 @@ import fileDownload from "js-file-download";
           return acc
         }, {...this.listQuery})
         const data = await Merchant.export(tempSearch)
-        fileDownload(data, `商户报表.xls`);
+        fileDownload(data, `商户报表.xlsx`);
       },
       async downMo(){
         const data = await Merchant.downloadMo()
-        fileDownload(data, `商家导入模板.xls`);
+        fileDownload(data, `商家导入模板.xlsx`);
       }
     }
   }

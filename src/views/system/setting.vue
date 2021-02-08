@@ -16,13 +16,13 @@
     </div>
 
     <el-tabs v-loading="listLoading" type="border-card" @tab-click="changeTab">
-      <el-tab-pane v-for="(item,idx) in categoryList" :key="idx" :label="item.categoryName">
+      <el-tab-pane v-for="(item,idx) in categoryList" :key="idx" :label="item.configTypeTitle">
 
         <el-form label-width="200px">
 
           <el-row v-for="(vo,ko) in list" :key="ko" :gutter="30">
             <el-col :span="14">
-              <el-form-item :label="vo.title">
+              <el-form-item :label="vo.configTitle">
 
                 <el-input
                   v-if="vo.type==0"

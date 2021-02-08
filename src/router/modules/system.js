@@ -140,13 +140,13 @@ const inspectionRouter = {
   },
   children: [
     {
-      path: '/inspectionList',
+      path: 'inspectionList',
       component: () => import('@/views/inspection/inspectionList'),
       name: '巡检列表',
       meta: { title: '巡检列表' }
     },
     {
-      path: '/inspectionLineList',
+      path: 'inspectionLineList',
       component: () => import('@/views/inspection/inspectionLineList'),
       name: '巡检路线管理',
       meta: { title: '巡检路线管理' }
