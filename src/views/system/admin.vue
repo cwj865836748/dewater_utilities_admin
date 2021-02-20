@@ -45,7 +45,7 @@
       >
         <template slot-scope="{row}">
 
-          <el-button type="primary" size="small" @click="handleCreateEdit('edit',row)" v-if="isAuth('sys:user:update')">
+          <el-button type="warning" size="small" @click="handleCreateEdit('edit',row)" v-if="isAuth('sys:user:update')">
             {{ $t('common.edit') }}
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)" v-if="isAuth('sys:user:delete')">
@@ -63,7 +63,7 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="$t(`common.${dialogFormStatus}`)" :visible.sync="dialogFormVisible">
+    <el-dialog :title="$t(`common.${dialogFormStatus}`)" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm" label-position="top" :rules="rules" :model="temp">
         <el-row :gutter="60">
 
@@ -164,7 +164,7 @@
         },
         rules: {
           username: [
-            {required: true, trigger: 'blur', validator: validateRequire, text: this.$t('common.email')}
+            {required: true, trigger: 'blur', validator: validateRequire, text:'姓名'}
           ],
           password: [{
             required: true,
@@ -172,9 +172,9 @@
             validator: validateRequire,
             text: this.$t('login.password')
           }, {pattern: /^[a-zA-Z0-9_-]{6,18}$/, message: this.$t('common.pwdTntensityTip')}],
-          nickname: [{required: true, trigger: 'blur', validator: validateRequire, text: this.$t('admin.nickname')}],
+          nickname: [{required: true, trigger: 'blur', validator: validateRequire, text: '昵称'}],
           mobile: [
-            { validator: validPhone, trigger: 'blur' }
+            { required: true,validator: validPhone, trigger: 'blur' }
           ]
         },
         roleList: []
@@ -277,7 +277,7 @@
           type: 'warning'
         }).then(() => {
           Admin.delete([row.userId]).then(res => {
-            const flag = --this.total % this.listQuery.limit
+            const flag = --this.total % this.listQuery.pageSize
             if (!flag && this.total) this.listQuery.page--
             this.getList()
             this.$message({

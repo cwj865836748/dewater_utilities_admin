@@ -400,7 +400,7 @@ import fileDownload from "js-file-download";
       },
       async downMo(){
         const data = await Merchant.downloadMo()
-        fileDownload(data, `商家导入模板.xlsx`);
+        fileDownload(data, `商户导入模板.xlsx`);
       }
     }
   }

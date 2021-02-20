@@ -209,7 +209,7 @@
           this.userList = res.data.list
           this.userTotal = res.data.totalCount
           this.userListLoading = false
-          this.selectTableByUserId()
+          this.dialogFormStatus === 'edit'&&!this.multipleStatus&&this.selectTableByUserId()
         })
       },
       selectTableByUserId() {
@@ -221,9 +221,7 @@
           for (var i = 0; i < userIdSelectList.length; i++) {
             for (var j = 0; j < tableData.length; j++) {
               if (userIdSelectList[i].userName === tableData[j].userName) {
-                // 执行选中方法
                 this.$refs.multipleTable.toggleRowSelection(tableData[j], true)
-                // userIdSelectList.splice(i, 1)
               }
             }
           }
@@ -240,7 +238,9 @@
       },
       // 创建或编辑 type create or edit
       async handleCreateEdit(type, row) {
-        if (type == 'create') this.resetTemp()
+        if (type == 'create')
+          this.multipleStatus=true
+          this.resetTemp()
         if (type == 'edit') {
           this.temp = JSON.parse(JSON.stringify(row))
           this.multipleSelection=this.temp.userList||[]
@@ -313,9 +313,8 @@
       },
       handleSelectRow(val) {
         if(this.multipleStatus){
-          this.temp.multipleSelection = val
+          this.multipleSelection = val
         }
-
       }
     }
   }

@@ -35,7 +35,7 @@
       >
         <template slot-scope="{row}">
 
-          <el-button type="primary" size="small" @click="handleCreateEdit('edit',row)" v-if="isAuth('sys:role:update')">
+          <el-button type="warning" size="small" @click="handleCreateEdit('edit',row)" v-if="isAuth('sys:role:update')">
             {{ $t('common.edit') }}
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)" v-if="isAuth('sys:role:delete')">
@@ -53,7 +53,7 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="$t(`common.${dialogFormStatus}`)" :visible.sync="dialogFormVisible">
+    <el-dialog :title="$t(`common.${dialogFormStatus}`)" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm" label-position="top" :rules="rules" :model="temp">
         <el-row :gutter="60">
           <el-col :span="14" :offset="1">

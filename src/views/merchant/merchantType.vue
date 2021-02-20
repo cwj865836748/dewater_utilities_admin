@@ -31,7 +31,7 @@
       >
         <template slot-scope="{row}">
 
-          <el-button type="primary" size="small" @click="handleCreateEdit('edit',row)">
+          <el-button type="warning" size="small" @click="handleCreateEdit('edit',row)">
             {{ $t('common.edit') }}
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">

@@ -13,7 +13,7 @@
         <h3 class="title">
           排水管理进小区
         </h3>
-        <lang-select class="set-language"/>
+<!--        <lang-select class="set-language"/>-->
       </div>
 
       <el-form-item prop="username">
@@ -64,9 +64,9 @@
         {{ $t('login.logIn') }}
       </el-button>
 
-      <el-button type="text" class="fr" @click="handleForgotPassword">
-        {{ $t('login.forgotPassword') }}
-      </el-button>
+<!--      <el-button type="text" class="fr" @click="handleForgotPassword">-->
+<!--        {{ $t('login.forgotPassword') }}-->
+<!--      </el-button>-->
 
     </el-form>
 

@@ -67,6 +67,14 @@ class InspectionModel {
       params
     })
   }
+  downloadQr(data){
+    return request({
+      url: '/admin/way/downloadQr',
+      method: 'post',
+      data,
+      responseType: 'blob'
+    })
+  }
 }
 
 

@@ -13,11 +13,7 @@
       <el-table-column width="120px" align="center" label="巡检人名称" prop="userName"/>
       <el-table-column width="120px" align="center" label="巡检人电话" prop="phone"/>
       <el-table-column width="200px" align="center" label="巡检开始时间" prop="startTime"/>
-      <el-table-column width="80px" align="center" label="巡检时限" >
-        <template slot-scope="{row}">
-           <span>{{row.way.totalHour}}</span>
-        </template>
-      </el-table-column>
+      <el-table-column width="200px" align="center" label="巡检时限" prop="timeDifference"/>
       <el-table-column width="80px" align="center" label="巡检状态" prop="patrolStatus">
         <template slot-scope="{row}">
           <el-tag v-if="row.patrolStatus" type="success">已结束</el-tag>
@@ -50,9 +46,9 @@
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="small" @click="getInspectionLine(row)" >
-            巡检路线
+            路线详情
           </el-button>
-          <el-button v-if="row.patrolImage" type="info" size="small" @click="getInspectionPic(row)">
+          <el-button v-if="row.patrolImage" type="success" size="small" @click="getInspectionPic(row)">
             巡检照片
           </el-button>
           <el-button v-if="!row.patrolStatus" type="danger" size="small" @click="getInspectionTask(row)">
@@ -81,7 +77,7 @@
       <Map v-if="lineVisible" ref="map" type="view" :latitude="latitude" :longitude="longitude" :nodeList="nodeList"/>
       <div class="taskTime" v-if="taskStatus">
         <div style="margin: 10px 0;">打卡时间:</div>
-        <span class="taskDetail" v-for="(item,index) in nodeList" :key="index">{{item.nodeName}}:{{item.nodeTime}}</span>
+        <el-tag class="taskDetail" v-for="(item,index) in nodeList" :key="index">{{item.nodeName}}:{{item.nodeTime}}</el-tag>
       </div>
     </el-dialog>
   </div>
@@ -173,7 +169,16 @@
         tempSearch.startTime=tempSearch.timeRanger?tempSearch.timeRanger[0]:undefined
         tempSearch.endTime=tempSearch.timeRanger?tempSearch.timeRanger[1]:undefined
         Inspection.list(tempSearch).then(res => {
-          this.list = res.data.list
+          this.list = res.data.list.map(item=>{
+            if(item.way.startTime){
+              var time=Date.parse(item.way.endTime)-Date.parse(item.way.startTime)
+              var hour=Math.floor(time/1000/60/60);
+              var minute=Math.floor(time/1000/60-hour*60);
+              var second=time/1000-hour*60*60-minute*60;
+              return {...item,timeDifference:`${hour}时${minute}分${second}秒`}
+            }
+              return {...item,timeDifference:`${item.way.totalHour}小时`}
+          })
           this.total = res.data.totalCount
           this.listLoading = false
         })
@@ -188,6 +193,8 @@
         Inspection.patrolInfo({id:row.id}).then(res => {
           const {latitude, longitude} =getPointsCenter(res.data.nodeList)
           this.lineVisible=true
+          res.data.startTime=res.data.startTime?res.data.startTime.split(' ')[1]:''
+          res.data.endTime=res.data.endTime?res.data.endTime.split(' ')[1]:''
           this.inspectionOne=res.data
           this.latitude=latitude
           this.longitude=longitude
@@ -232,13 +239,13 @@
   }
   .taskTime {
     color: #333;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     margin-bottom: 10px;
   }
   .taskDetail {
     font-size: 15px;
-    font-weight: bold;
+    margin-bottom: 10px;
     margin-right: 10px;
   }
 </style>

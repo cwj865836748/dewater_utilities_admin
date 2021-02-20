@@ -46,16 +46,16 @@
       >
         <template slot-scope="{row}">
           <el-button type="warning" size="small" @click="handleCreateEdit('edit',row)" >
-            修改
+            编辑
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">
             删除
           </el-button>
           <el-button type="primary" size="small" @click="getInspectionLine(row)" >
-            巡检路线
+            路线轨迹
           </el-button>
-          <el-button type="primary" size="small" @click="getInspectionDown(row)" >
-            下载巡检路线二维码
+          <el-button type="info" size="small" @click="getInspectionDown(row)" >
+            下载路线二维码
           </el-button>
         </template>
       </el-table-column>
@@ -90,6 +90,7 @@
                   range-separator="至"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
+                  :editable="false"
                   format="HH:mm:ss"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   placeholder="选择时间范围">
@@ -150,7 +151,7 @@
     </el-dialog>
     <!--巡检路线-->
     <el-dialog title="巡检路线" :visible.sync="lineVisible" width="1000px" :close-on-click-modal="false">
-      <div class="taskTime" v-if="inspectionOne.startTime">起止时间：{{inspectionOne.startTime}}-{{inspectionOne.endTime}}</div>
+      <div class="taskTime" v-if="inspectionOne.startTime">起止时间：{{inspectionOne.startTimeStr}}-{{inspectionOne.endTimeStr}}</div>
       <div class="taskTime" v-else>总巡检时长(小时)：{{inspectionOne.totalHour}}</div>
       <Map v-if="lineVisible" ref="mapLine" :latitude="latitude" :longitude="longitude" :nodeList="nodeList"/>
     </el-dialog>
@@ -212,10 +213,10 @@
             {required: true, trigger: 'blur', validator: validateRequire, text: '路线标题'},
           ],
           nodeList: [
-            { validator: validNodeList, trigger: 'blur' }
+            { required: true,validator: validNodeList, trigger: 'blur' }
           ],
         week:[
-          { validator: validWeekList, trigger: 'blur' }
+          { required: true,validator: validWeekList, trigger: 'blur' }
         ]
         },
         //巡检路线详情
@@ -284,6 +285,7 @@
           workerIdArray:[],
           nodeList:[]
         }
+        this.timeRange=null
       },
       proving() {
         this.temp.totalHour = this.temp.totalHour.replace(/[^\.\d]/g,'');
@@ -296,13 +298,14 @@
         if (type == 'create') {
           this.latitude=24.48405
           this.longitude=118.03394
+          this.multipleStatus=true
           this.resetTemp()
         }
         if (type == 'edit') {
           const {data} = await Inspection.lineInfo({id: row.id})
           this.temp = data
           this.temp.week=data.week.split(',').map(Number)
-          this.multipleSelection=data.userList
+          this.multipleSelection=data.userList||[]
           this.multipleStatus=false
           this.timeRange = data.startTime?[data.startTime,data.endTime]:''
           const {latitude, longitude} =getPointsCenter(data.nodeList)
@@ -433,7 +436,7 @@
           this.userList = res.data.list
           this.userTotal = res.data.totalCount
           this.userListLoading = false
-          this.selectTableByUserId()
+          this.dialogFormStatus === 'edit'&&!this.multipleStatus&&this.selectTableByUserId()
         })
       },
       selectTableByUserId() {
@@ -459,30 +462,26 @@
         }
       },
       getInspectionDown(row){
-        Inspection.lineInfo({id:row.id}).then(res => {
-          const nodeList = res.data.nodeList
-          for(let i = 0;i<nodeList.length;i++) {
-            this.downloadFile(nodeList[i].qrImage)
-          }
+        Inspection.downloadQr({id:row.id}).then(res => {
+          const blob = new Blob([res],{type:'application.zip'})
+          const fileName = `${row.wayTitle}.zip`
+          const elink = document.createElement('a')
+          elink.download=fileName
+          elink.style.display='none'
+          elink.href=URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href)
+          document.body.removeChild(elink)
         })
-      },
-      downloadFile (url)  {
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none"; // 防止影响页面
-      iframe.style.height = 0; // 防止影响页面
-      iframe.src = url;
-      document.body.appendChild(iframe); // 这一行必须，iframe挂在到dom树上才会发请求
-      setTimeout(()=>{
-        iframe.remove();
-       }, 5 * 60 * 1000);
-     }
+      }
     }
   }
 </script>
 <style lang="scss" scoped type="text/scss" >
   .taskTime {
     color: #333;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     margin-bottom: 10px;
   }

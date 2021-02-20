@@ -17,11 +17,11 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect"/>
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect"/>
-        </el-tooltip>
+<!--        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">-->
+<!--          <size-select id="size-select" class="right-menu-item hover-effect"/>-->
+<!--        </el-tooltip>-->
 
-        <lang-select class="right-menu-item hover-effect"/>
+<!--        <lang-select class="right-menu-item hover-effect"/>-->
 
         <!--<div class="right-menu-item hover-effect" id="message" v-if="staffId">-->
         <!--<el-button type="info" icon="el-icon-message" circle size="mini" plain></el-button>-->
@@ -45,9 +45,9 @@
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
-          <el-dropdown-item command="cp">
-            {{ $t('navbar.changePassword') }}
-          </el-dropdown-item>
+<!--          <el-dropdown-item command="cp">-->
+<!--            {{ $t('navbar.changePassword') }}-->
+<!--          </el-dropdown-item>-->
 
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>

@@ -46,16 +46,16 @@
         <template slot-scope="{row}">
 
           <el-button type="primary" size="small" @click="updateUser(row,0)">
-            修改姓名
+            备注姓名
           </el-button>
           <el-button type="danger" size="small" @click="updateUser(row,1)">
             修改身份
           </el-button>
           <el-button v-if="row.identity" type="warning" size="small" @click="updateUser(row,2)">
-            修改绑定小区
+            绑定小区
           </el-button>
           <el-button v-if="row.identity" type="info" size="small" @click="updateUser(row,3)">
-            修改所属管长
+            绑定所属管长
           </el-button>
         </template>
       </el-table-column>
@@ -111,7 +111,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改绑定小区" :visible.sync="updateUserStreetVisible" width="1000px" :close-on-click-modal="false">
+    <el-dialog title="绑定小区" :visible.sync="updateUserStreetVisible" width="1000px" :close-on-click-modal="false">
       <el-form v-if="updateUserStreetVisible" ref="updateUserStreetForm" label-position="top" :model="updateUserStreetForm">
         <el-row>
           <el-col >
@@ -155,7 +155,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改所属管长" :visible.sync="updateUserAdminVisible" width="1000px" :close-on-click-modal="false">
+    <el-dialog title="绑定所属管长" :visible.sync="updateUserAdminVisible" width="1000px" :close-on-click-modal="false">
       <el-form ref="updateUserAdminForm" label-position="top" :model="updateUserAdminForm">
         <el-row>
           <el-col >

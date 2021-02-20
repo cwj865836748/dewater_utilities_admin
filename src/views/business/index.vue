@@ -20,7 +20,7 @@
       </el-table-column>
 
       <el-table-column min-width="200px" align="center" label="业务名称" prop="typeName"/>
-      <el-table-column width="300px" align="center" label="维修时限" prop="totalHour"/>
+      <el-table-column width="300px" align="center" label="维修时限(小时)" prop="totalHour"/>
       <el-table-column width="300px" align="center" label="创建时间" prop="createTime"/>
       <el-table-column width="160px" align="center" label="是否禁用" prop="beForbid">
         <template slot-scope="{row}">
@@ -39,7 +39,7 @@
       >
         <template slot-scope="{row}">
 
-          <el-button type="primary" size="small" @click="handleCreateEdit('edit',row)">
+          <el-button type="warning" size="small" @click="handleCreateEdit('edit',row)">
             {{ $t('common.edit') }}
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(row)">

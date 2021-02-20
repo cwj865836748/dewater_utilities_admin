@@ -8,12 +8,12 @@
              已报案数量
             </div>
             <div class="flex-x-between mouse" @click="goCase(4,'today')">
-              <div class="card-panel-text">今日新增</div>
-              <count-to :start-val="0" :end-val="temp.today_total_case" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_total_case" :duration="1600" class="card-panel-num icon-red"/>
             </div>
             <div class="flex-x-between mouse" @click="goCase(4,'month')">
-              <div class="card-panel-text">本月新增</div>
-              <count-to :start-val="0" :end-val="temp.month_total_case" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_total_case" :duration="1600" class="card-panel-num icon-green"/>
             </div>
           </div>
         </div>
@@ -25,12 +25,12 @@
               待处理数量
             </div>
             <div class="flex-x-between mouse" @click="goCase(0,'today')">
-              <div class="card-panel-text">今日新增</div>
-              <count-to :start-val="0" :end-val="temp.today_wait_handle" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_wait_handle" :duration="1600" class="card-panel-num icon-red"/>
             </div>
             <div class="flex-x-between mouse" @click="goCase(0,'month')">
-              <div class="card-panel-text">本月新增</div>
-              <count-to :start-val="0" :end-val="temp.month_wait_handle" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_wait_handle" :duration="1600" class="card-panel-num icon-green"/>
             </div>
           </div>
         </div>
@@ -42,12 +42,12 @@
               待评价
             </div>
             <div class="flex-x-between mouse" @click="goCase(1,'today')">
-              <div class="card-panel-text">今日新增</div>
-              <count-to :start-val="0" :end-val="temp.today_wait_comment" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_wait_comment" :duration="1600" class="card-panel-num icon-red"/>
             </div>
             <div class="flex-x-between mouse" @click="goCase(1,'month')">
-              <div class="card-panel-text">本月新增</div>
-              <count-to :start-val="0" :end-val="temp.month_wait_comment" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_wait_comment" :duration="1600" class="card-panel-num icon-green"/>
             </div>
           </div>
         </div>
@@ -59,12 +59,12 @@
               已评价
             </div>
             <div class="flex-x-between mouse" @click="goCase(2,'today')">
-              <div class="card-panel-text">今日新增</div>
-              <count-to :start-val="0" :end-val="temp.today_already_comment" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_already_comment" :duration="1600" class="card-panel-num icon-red"/>
             </div>
             <div class="flex-x-between mouse" @click="goCase(2,'month')">
-              <div class="card-panel-text">本月新增</div>
-              <count-to :start-val="0" :end-val="temp.month_already_comment" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_already_comment" :duration="1600" class="card-panel-num icon-green"/>
             </div>
           </div>
         </div>
@@ -76,12 +76,12 @@
               巡检数量
             </div>
             <div class="flex-x-between mouse" @click="goInspection('today')">
-              <div class="card-panel-text">今日新增</div>
-              <count-to :start-val="0" :end-val="temp.today_already_patrol" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">今日新增</div>
+              <count-to :start-val="0" :end-val="temp.today_already_patrol" :duration="1600" class="card-panel-num icon-red"/>
             </div>
             <div class="flex-x-between mouse" @click="goInspection('month')">
-              <div class="card-panel-text">本月新增</div>
-              <count-to :start-val="0" :end-val="temp.month_total_already_patrol" :duration="1600" class="card-panel-num"/>
+              <div class="card-panel-text-title">本月新增</div>
+              <count-to :start-val="0" :end-val="temp.month_total_already_patrol" :duration="1600" class="card-panel-num icon-green"/>
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@
       },
       goInspection(time){
         this.$router.push({
-          path:'/inspectionList/inspectionList',
+          path:'/inspection/inspectionList',
           query:{
             time
           }
@@ -198,11 +198,11 @@
         color: #36a3f7;
       }
 
-      .icon-money {
+      .icon-red {
         color: #f4516c;
       }
 
-      .icon-shopping {
+      .icon-green {
         color: #34bfa3
       }
 
@@ -228,7 +228,15 @@
 
         .card-panel-text {
           line-height: 18px;
-          color: rgba(0, 0, 0, 0.45);
+          color: #000;
+          font-size: 20px;
+          margin-bottom: 18px;
+          word-break: keep-all;
+          text-align: center;
+        }
+        .card-panel-text-title {
+          line-height: 18px;
+          color: #000;
           font-size: 16px;
           margin-bottom: 18px;
           word-break: keep-all;
