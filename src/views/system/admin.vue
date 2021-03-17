@@ -68,7 +68,7 @@
         <el-row :gutter="60">
 
           <el-col :span="14" :offset="1">
-            <el-form-item label="姓名" prop="username">
+            <el-form-item label="姓名" prop="username" v-if="temp.userId!==1">
               <el-input v-model="temp.username" :placeholder="$t('common.pleaseEnter')" clearable/>
             </el-form-item>
             <el-form-item :label="$t('common.mobile')" prop="mobile">
@@ -81,7 +81,7 @@
               <el-input v-model="temp.password" :placeholder="$t('common.pleaseEnter')" clearable show-password/>
               <span v-if="dialogFormStatus=='edit'" style="color: red;">{{ $t('admin.tip2') }}</span>
             </el-form-item>
-            <el-form-item label="是否管长" prop="battalionCommander">
+            <el-form-item label="是否管长" prop="battalionCommander" v-if="temp.userId!==1">
                 <el-radio-group v-model="temp.battalionCommander">
                   <el-radio v-for="vo in booleanType" :key="vo.value" :label="vo.value">
                     {{ vo.label }}
@@ -96,7 +96,7 @@
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('admin.roleIdList')" prop="roleIdList">
+            <el-form-item :label="$t('admin.roleIdList')" prop="roleIdList" v-if="temp.userId!==1">
               <el-checkbox-group v-model="temp.roleIdList">
                 <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{ role.roleName }}
                 </el-checkbox>

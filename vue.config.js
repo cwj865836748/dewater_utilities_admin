@@ -42,7 +42,7 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: 'http://192.168.0.24:8060',  //本地服务器
         // target: 'http://193.112.135.67:8060',  //测试服务器
-        target: 'https://water.zyark2.com',  //测试服务器2
+        target: 'https://api.hdenv.cn',  //测试服务器2
         // target: 'http://47.56.116.109:8060', //正式服务器
         // secure: true,  // 如果是https接口，需要配置这个参数
         changeOrigin: true,

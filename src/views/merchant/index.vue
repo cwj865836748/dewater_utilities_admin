@@ -236,7 +236,7 @@ import fileDownload from "js-file-download";
         historyListQuery: {
           page: 1,
           pageSize: 10,
-          houseNo:''
+          id:''
         },
         historyVisible:false,
         mechantTypeList:[]
@@ -352,7 +352,7 @@ import fileDownload from "js-file-download";
         })
       },
       handleHistory(row){
-         this.historyListQuery.houseNo=row.houseNo
+         this.historyListQuery.id=row.id
          this.historyListQuery.page=1
          this.historyVisible=true
          this.getHistoryList()
@@ -400,7 +400,7 @@ import fileDownload from "js-file-download";
       },
       async downMo(){
         const data = await Merchant.downloadMo()
-        fileDownload(data, `商户导入模板.xlsx`);
+        fileDownload(data, `商户导入模板.xls`);
       }
     }
   }

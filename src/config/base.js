@@ -53,7 +53,8 @@ export const appVersionType = [
 // 身份
 export const identity = [
   {label: '市民', value: 0, type: 'success'},
-  {label: '巡检人员', value: 1, type: 'primary'}
+  {label: '巡检人员', value: 1, type: 'primary'},
+  {label: '领导', value: 2, type: 'primary'}
 ]
 // 是否
 export const isOkOrNo = [

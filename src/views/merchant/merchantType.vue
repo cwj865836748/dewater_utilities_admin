@@ -19,7 +19,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="商家类型标题" prop="title"/>
+      <el-table-column align="center" label="商户类型标题" prop="title"/>
       <el-table-column align="center" label="创建时间" prop="createTime"/>
 
       <el-table-column

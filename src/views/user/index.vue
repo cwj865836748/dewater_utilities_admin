@@ -19,7 +19,8 @@
       <el-table-column width="120px" align="center" label="微信昵称" prop="nickname"/>
       <el-table-column width="160px" align="center" label="身份" prop="identity">
         <template slot-scope="{row}">
-          <el-tag v-if="row.identity" type="danger">巡检人员</el-tag>
+          <el-tag v-if="row.identity===1" type="danger">巡检人员</el-tag>
+          <el-tag v-else-if="row.identity===2" type="primary">领导</el-tag>
           <el-tag v-else type="success">市民</el-tag>
         </template>
       </el-table-column>
@@ -51,10 +52,10 @@
           <el-button type="danger" size="small" @click="updateUser(row,1)">
             修改身份
           </el-button>
-          <el-button v-if="row.identity" type="warning" size="small" @click="updateUser(row,2)">
+          <el-button v-if="row.identity===1" type="warning" size="small" @click="updateUser(row,2)">
             绑定小区
           </el-button>
-          <el-button v-if="row.identity" type="info" size="small" @click="updateUser(row,3)">
+          <el-button v-if="row.identity===1" type="info" size="small" @click="updateUser(row,3)">
             绑定所属管长
           </el-button>
         </template>

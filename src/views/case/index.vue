@@ -223,6 +223,8 @@ import fileDownload from "js-file-download";
           acc[cur.field] = cur.value
           return acc
         }, {...this.listQuery})
+        tempSearch.startCreateTime=tempSearch.timeRanger?tempSearch.timeRanger[0]:undefined
+        tempSearch.endCreateTime=tempSearch.timeRanger?tempSearch.timeRanger[1]:undefined
         const data = await Case.export(tempSearch)
         fileDownload(data, `案件报表.xlsx`);
       },
